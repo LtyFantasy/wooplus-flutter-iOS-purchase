@@ -105,7 +105,7 @@
 
     NSArray *transactions = self.paymentQueueHandler.transactions.allValues;
     NSMutableArray *maps = [NSMutableArray array];
-    for (SKPaymentTransactions *t in transactions) {
+    for (SKPaymentTransaction *t in transactions) {
         [maps addObject:[FIAObjectTranslator getMapFromSKPaymentTransaction:t]];
     }
     return maps;

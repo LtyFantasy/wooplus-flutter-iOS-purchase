@@ -262,12 +262,12 @@ class _TransactionObserver implements SKTransactionObserverWrapper {
     }
 
     if (originTransactions == null) {
-      return null;
+      return [];
     }
 
-    List<SKPaymentTransactionStateWrapper> transactions = originTransactions
-        .map<SKPaymentTransactionStateWrapper>(
-          (dynamic map) => SKPaymentTransactionStateWrapper.fromJson(map))
+    List<SKPaymentTransactionWrapper> transactions = originTransactions
+        .map<SKPaymentTransactionWrapper>(
+          (dynamic map) => SKPaymentTransactionWrapper.fromJson(map))
         .toList();
 
     return transactions;
