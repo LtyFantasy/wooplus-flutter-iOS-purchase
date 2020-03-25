@@ -94,9 +94,21 @@
     [self retrieveReceiptData:call result:result];
   } else if ([@"-[InAppPurchasePlugin refreshReceipt:result:]" isEqualToString:call.method]) {
     [self refreshReceipt:call result:result];
+  } else if ([@"-[InAppPurchasePlugin getAllTransactions]" isEqualToString:call.method]) {
+    [self getAllTransactions];
   } else {
     result(FlutterMethodNotImplemented);
   }
+}
+
+- (NSArray*)getAllTransactions {
+
+    NSArray *transactions = self.paymentQueueHandler.transactions.allValues;
+    NSMutableArray *maps = [NSMutableArray array];
+    for (SKPaymentTransactions *t in transactions) {
+        [maps addObject:[FIAObjectTranslator getMapFromSKPaymentTransaction:t]];
+    }
+    return maps;
 }
 
 - (void)canMakePayments:(FlutterResult)result {

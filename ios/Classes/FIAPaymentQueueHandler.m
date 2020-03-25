@@ -49,6 +49,7 @@
 }
 
 - (void)finishTransaction:(SKPaymentTransaction *)transaction {
+  [self.transactionsSetter removeObjectForKey:transaction.transactionIdentifier];
   [self.queue finishTransaction:transaction];
 }
 

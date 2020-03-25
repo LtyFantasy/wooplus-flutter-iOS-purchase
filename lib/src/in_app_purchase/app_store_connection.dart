@@ -83,11 +83,11 @@ class AppStoreConnection implements InAppPurchaseConnection {
 
     try {
       String receiptData = await _observer.getReceiptData();
+
       final List<SKPaymentTransactionWrapper> restoredTransactions =
-          await _observer.getRestoredTransactions(
-              queue: _skPaymentQueueWrapper,
-              applicationUserName: applicationUserName);
+          await _observer.getAllTransactions();
       _observer.cleanUpRestoredTransactions();
+
       pastPurchases =
           restoredTransactions.map((SKPaymentTransactionWrapper transaction) {
         assert(transaction.transactionState ==
@@ -250,5 +250,26 @@ class _TransactionObserver implements SKTransactionObserverWrapper {
       _receiptData = null;
     }
     return _receiptData;
+  }
+
+  Future<List> getAllTransactions() async {
+
+    List originTransactions;
+    try {
+      originTransactions = await SKReceiptManager.getAllTransactions();
+    } catch (e) {
+      originTransactions = null;
+    }
+
+    if (originTransactions == null) {
+      return null;
+    }
+
+    List<SKPaymentTransactionStateWrapper> transactions = originTransactions
+        .map<SKPaymentTransactionStateWrapper>(
+          (dynamic map) => SKPaymentTransactionStateWrapper.fromJson(map))
+        .toList();
+
+    return transactions;
   }
 }
