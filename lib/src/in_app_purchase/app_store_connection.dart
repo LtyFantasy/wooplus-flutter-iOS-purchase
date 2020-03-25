@@ -203,8 +203,7 @@ class _TransactionObserver implements SKTransactionObserverWrapper {
       if (_restoredTransactions == null) {
         _restoredTransactions = [];
       }
-      _restoredTransactions
-          .addAll(transactions).map((SKPaymentTransactionWrapper wrapper) => wrapper));
+      _restoredTransactions.addAll(transactions);
       return;
     }
 
