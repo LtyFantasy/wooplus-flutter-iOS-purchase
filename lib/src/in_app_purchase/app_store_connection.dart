@@ -85,12 +85,14 @@ class AppStoreConnection implements InAppPurchaseConnection {
       String receiptData = await _observer.getReceiptData();
 
       final List<SKPaymentTransactionWrapper> restoredTransactions =
-          await _observer.getAllTransactions();
+          await _observer.getRestoredTransactions(
+              queue: _skPaymentQueueWrapper,
+              applicationUserName: applicationUserName);
       _observer.cleanUpRestoredTransactions();
 
       pastPurchases =
           restoredTransactions.map((SKPaymentTransactionWrapper transaction) {
-
+        assert(transaction.transactionState == SKPaymentTransactionStateWrapper.restored);
         return PurchaseDetails.fromSKTransaction(transaction, receiptData)
           ..status = SKTransactionStatusConverter()
               .toPurchaseStatus(transaction.transactionState)
@@ -103,6 +105,51 @@ class AppStoreConnection implements InAppPurchaseConnection {
                 )
               : null;
       }).toList();
+    } on PlatformException catch (e) {
+      error = IAPError(
+          source: IAPSource.AppStore,
+          code: e.code,
+          message: e.message,
+          details: e.details);
+    } on SKError catch (e) {
+      error = IAPError(
+          source: IAPSource.AppStore,
+          code: kRestoredPurchaseErrorCode,
+          message: e.domain,
+          details: e.userInfo);
+    }
+    return QueryPurchaseDetailsResponse(
+        pastPurchases: pastPurchases, error: error);
+  }
+
+  @override
+  Future<QueryPurchaseDetailsResponse> queryAllUnfinishedPurchases() async {
+
+    IAPError error;
+    List<PurchaseDetails> pastPurchases = [];
+
+    try {
+      String receiptData = await _observer.getReceiptData();
+
+      final List<SKPaymentTransactionWrapper> restoredTransactions =
+          await _observer.getAllTransactions();
+      _observer.cleanUpRestoredTransactions();
+
+      pastPurchases =
+          restoredTransactions.map((SKPaymentTransactionWrapper transaction) {
+
+            return PurchaseDetails.fromSKTransaction(transaction, receiptData)
+              ..status = SKTransactionStatusConverter()
+                  .toPurchaseStatus(transaction.transactionState)
+              ..error = transaction.error != null
+                  ? IAPError(
+                source: IAPSource.AppStore,
+                code: kPurchaseErrorCode,
+                message: transaction.error.domain,
+                details: transaction.error.userInfo,
+              )
+                  : null;
+          }).toList();
     } on PlatformException catch (e) {
       error = IAPError(
           source: IAPSource.AppStore,

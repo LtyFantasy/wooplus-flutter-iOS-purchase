@@ -239,6 +239,11 @@ abstract class InAppPurchaseConnection {
   Future<QueryPurchaseDetailsResponse> queryPastPurchases(
       {String applicationUserName});
 
+  /// 获取所有未finished的订单
+  ///
+  /// 内部增加了额外的接口getAllTransactions
+  Future<QueryPurchaseDetailsResponse> queryAllUnfinishedPurchases();
+
   /// (App Store only) retry loading purchase data after an initial failure.
   ///
   /// Throws an [UnsupportedError] on Android.
