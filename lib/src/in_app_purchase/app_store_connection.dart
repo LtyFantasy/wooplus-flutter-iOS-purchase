@@ -90,8 +90,7 @@ class AppStoreConnection implements InAppPurchaseConnection {
 
       pastPurchases =
           restoredTransactions.map((SKPaymentTransactionWrapper transaction) {
-        assert(transaction.transactionState ==
-            SKPaymentTransactionStateWrapper.restored);
+
         return PurchaseDetails.fromSKTransaction(transaction, receiptData)
           ..status = SKTransactionStatusConverter()
               .toPurchaseStatus(transaction.transactionState)
