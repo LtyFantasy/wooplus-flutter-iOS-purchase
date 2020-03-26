@@ -21,6 +21,6 @@ class SKReceiptManager {
 
   static Future<List> getAllTransactions() {
     return channel.invokeMethod<List>(
-        '-[InAppPurchasePlugin getAllTransactions]');
+        '-[InAppPurchasePlugin getAllTransactions:]');
   }
 }
