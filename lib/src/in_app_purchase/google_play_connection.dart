@@ -156,6 +156,12 @@ class GooglePlayConnection
   }
 
   @override
+  Future<QueryPurchaseDetailsResponse> queryAllUnfinishedPurchases() {
+    // TODO: implement queryAllUnfinishedPurchases
+    return null;
+  }
+
+  @override
   Future<PurchaseVerificationData> refreshPurchaseVerificationData() async {
     throw UnsupportedError(
         'The method <refreshPurchaseVerificationData> only works on iOS.');
