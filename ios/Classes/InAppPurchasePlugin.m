@@ -108,7 +108,8 @@
     for (SKPaymentTransaction *t in transactions) {
         [maps addObject:[FIAObjectTranslator getMapFromSKPaymentTransaction:t]];
     }
-    return result(maps);
+
+    result(maps);
 }
 
 - (void)canMakePayments:(FlutterResult)result {
