@@ -20,10 +20,10 @@ class GooglePlayConnection
     implements InAppPurchaseConnection {
   GooglePlayConnection._()
       : billingClient =
-            BillingClient((PurchasesResultWrapper resultWrapper) async {
-          _purchaseUpdatedController
-              .add(await _getPurchaseDetailsFromResult(resultWrapper));
-        }) {
+  BillingClient((PurchasesResultWrapper resultWrapper) async {
+    _purchaseUpdatedController
+        .add(await _getPurchaseDetailsFromResult(resultWrapper));
+  }) {
     if (InAppPurchaseConnection.enablePendingPurchase) {
       billingClient.enablePendingPurchases();
     }
@@ -54,9 +54,9 @@ class GooglePlayConnection
   @override
   Future<bool> buyNonConsumable({@required PurchaseParam purchaseParam}) async {
     BillingResultWrapper billingResultWrapper =
-        await billingClient.launchBillingFlow(
-            sku: purchaseParam.productDetails.id,
-            accountId: purchaseParam.applicationUserName);
+    await billingClient.launchBillingFlow(
+        sku: purchaseParam.productDetails.id,
+        accountId: purchaseParam.applicationUserName);
     return billingResultWrapper.responseCode == BillingResponse.ok;
   }
 
@@ -122,16 +122,16 @@ class GooglePlayConnection
 
     Set errorCodeSet = responses
         .where((PurchasesResultWrapper response) =>
-            response.responseCode != BillingResponse.ok)
+    response.responseCode != BillingResponse.ok)
         .map((PurchasesResultWrapper response) =>
-            response.responseCode.toString())
+        response.responseCode.toString())
         .toSet();
 
     String errorMessage =
-        errorCodeSet.isNotEmpty ? errorCodeSet.join(', ') : null;
+    errorCodeSet.isNotEmpty ? errorCodeSet.join(', ') : null;
 
     List<PurchaseDetails> pastPurchases =
-        responses.expand((PurchasesResultWrapper response) {
+    responses.expand((PurchasesResultWrapper response) {
       return response.purchasesList;
     }).map((PurchaseWrapper purchaseWrapper) {
       return PurchaseDetails.fromPurchase(purchaseWrapper);
@@ -214,7 +214,7 @@ class GooglePlayConnection
       ];
     }
     List<ProductDetails> productDetailsList =
-        responses.expand((SkuDetailsResponseWrapper response) {
+    responses.expand((SkuDetailsResponseWrapper response) {
       return response.skuDetailsList;
     }).map((SkuDetailsWrapper skuDetailWrapper) {
       return ProductDetails.fromSkuDetails(skuDetailWrapper);
@@ -230,10 +230,10 @@ class GooglePlayConnection
         error: exception == null
             ? null
             : IAPError(
-                source: IAPSource.GooglePlay,
-                code: exception.code,
-                message: exception.message,
-                details: exception.details));
+            source: IAPSource.GooglePlay,
+            code: exception.code,
+            message: exception.message,
+            details: exception.details));
   }
 
   static Future<List<PurchaseDetails>> _getPurchaseDetailsFromResult(
@@ -248,7 +248,7 @@ class GooglePlayConnection
       );
     }
     final List<Future<PurchaseDetails>> purchases =
-        resultWrapper.purchasesList.map((PurchaseWrapper purchase) {
+    resultWrapper.purchasesList.map((PurchaseWrapper purchase) {
       return _maybeAutoConsumePurchase(
           PurchaseDetails.fromPurchase(purchase)..error = error);
     }).toList();
@@ -275,7 +275,7 @@ class GooglePlayConnection
     }
 
     final BillingResultWrapper billingResult =
-        await instance.consumePurchase(purchaseDetails);
+    await instance.consumePurchase(purchaseDetails);
     final BillingResponse consumedResponse = billingResult.responseCode;
     if (consumedResponse != BillingResponse.ok) {
       purchaseDetails.status = PurchaseStatus.error;
